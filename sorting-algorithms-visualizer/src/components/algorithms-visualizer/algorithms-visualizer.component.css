@@ -1,0 +1,13 @@
+/* ---------------------------------- */
+
+* {
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+/* ---------------------------------- */
+
+.container {
+  background-color: #313131;
+  min-height: 100vh;
+}
