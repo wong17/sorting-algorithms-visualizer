@@ -1,34 +1,25 @@
 /* ---------------------------------- */
 
-* {
-  font-family: sans-serif;
-  box-sizing: border-box;
-}
-
-/* ---------------------------------- */
-
 .container {
-  min-width: 100%;
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   place-content: center;
   padding: 10px;
-  background-color: #1b1b1b;
+  background-color: #181818;
 }
 
-/* OPTIONS */
+/* ---------------------------------- */
 
 h1 {
-  margin: 0;
   padding: 5px;
   color: white;
 }
 
 .nav__list {
-  margin: 0;
   padding: 5px;
   display: grid;
-  grid-template-columns: repeat(4, 100px) repeat(2, 120px) 165px 54px;
+  grid-template-columns: repeat(6, 110px) 165px;
   justify-content: end;
   align-items: center;
   column-gap: 8px;
@@ -39,36 +30,22 @@ h1 {
   align-items: center;
 }
 
-.nav__link {
+.nav__button {
   color: white;
-  display: inline-block;
-  text-decoration: none;
   padding: 10px;
-  background-color: #1b1b1b;
+  border: 1px solid white;
+  background-color: #4f81c2;
+  border-radius: 5px;
+  width: 110px;
+  font-size: 14px;
 }
 
-.nav__link:hover {
-  background-color: #4f81c2;
+.nav__button:hover {
+  cursor: pointer;
 }
 
 .generate_array--buton {
-  border: 1px solid white;
   background-color: #A36B05;
-  border-radius: 3px;
+  width: 160px;
 }
 
-.generate_array--buton:hover {
-  background-color: #a36b05;
-  color: white;
-}
-
-.sort--button {
-  border: 1px solid white;
-  border-radius: 3px;
-  background-color: #359c35;
-}
-
-.sort--button:hover {
-  background-color: #359c35;
-  color: white;
-}
