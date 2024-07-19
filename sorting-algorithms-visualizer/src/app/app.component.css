@@ -1,30 +1,42 @@
 /* ---------------------------------- */
 
-.container {
+.app-container {
   display: grid;
+  width: 100%;
   min-height: 100vh;
-  grid-template-rows: auto 1fr auto;
-  align-items: center;
+  grid-template-rows: auto 1fr;
+  align-content: center;
 }
 
+/* ROW 1 */
+/* ---------------------------------- */
+
+header {
+  display: grid;
+  grid-template-columns: 6% 1fr 6%;
+  width: 100%;
+  background-color: #181818;
+  color: white;
+  padding: 10px 0;
+  place-content: center;
+}
+
+/* ---------------------------------- */
+
+h1 {
+  padding: 5px 0;
+  grid-column: 2 / 3;
+}
+
+/* ROW 2 */
 /* ---------------------------------- */
 
 app-algorithms-visualizer {
   width: 100%;
   height: 100%;
-}
-
-/* ---------------------------------- */
-
-h1, h4 {
-  padding: 5px;
-}
-
-/* ---------------------------------- */
-
-header, footer {
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: row wrap;
   background-color: #181818;
-  color: white;
-  padding: 5px;
 }
