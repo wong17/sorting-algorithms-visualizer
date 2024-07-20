@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChil
 import { FormsModule } from '@angular/forms';
 import { SortingAlgorithm } from '../../algorithms/sorting-algorithm';
 import { MergeSort } from '../../algorithms/merge-sort';
+import { QuickSort } from '../../algorithms/quick-sort';
 
 @Component({
   selector: 'app-algorithms-visualizer',
@@ -32,7 +33,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   private selectedAlgorithmInstance: SortingAlgorithm | null = null;
   /* Diccionario de algoritmos */
   private algorithms: { [key: string]: SortingAlgorithm } = {
-    mergeSort: new MergeSort()
+    mergeSort: new MergeSort(),
+    quickSort: new QuickSort()
   };
 
   /* Para controlar las animaciones de los algoritmos */
