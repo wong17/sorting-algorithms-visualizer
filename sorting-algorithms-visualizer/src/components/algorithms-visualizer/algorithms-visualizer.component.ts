@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SortingAlgorithm } from '../../algorithms/sorting-algorithm';
+import { MergeSort } from '../../algorithms/merge-sort';
 
 @Component({
   selector: 'app-algorithms-visualizer',
@@ -27,8 +29,16 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
 
   /* Algoritmo seleccionado en la lista */
   public selectedAlgorithm: string = 'mergeSort';
+  private selectedAlgorithmInstance: SortingAlgorithm | null = null;
+
+  private algorithms: { [key: string]: SortingAlgorithm } = {
+    mergeSort: new MergeSort()
+  };
 
   private isShuffleAnimationRunning: boolean = false;
+  private isAlgorithmAnimationRunning: boolean = false;
+  private animationStepIndex: number = 0;
+  private animationDelay: number = 500;
 
   /**
    * Inicia el canvas y el event loop
@@ -41,7 +51,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
+   * Limpia los eventos registrados al destruir el componente
    */
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.onResize.bind(this));
@@ -64,7 +74,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Calcula el ancho y alto de cada barra
+   * Calcula el ancho y alto de cada barra mientras se redimensiona
    */
   private setupBarsWhileResizing(): void {
     // Calcular ancho de las barras en base al ancho del contenedor y número de barras a dibujar
@@ -78,6 +88,9 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Calcula el ancho y alto de cada barra inicialmente
+   */
   private setupBars(): void {
     // Calcular ancho de las barras en base al ancho del contenedor y número de barras a dibujar
     this.barWidth = this.myCanvas.nativeElement.width / this.numberOfBars;
@@ -115,10 +128,27 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
         this.isShuffleAnimationRunning = this.shuffleSteps.length > 0;
       }, this.shuffleDelay);
     }
+
+    // Si se está ejecutando un algoritmo de ordenamiento
+    if (this.isAlgorithmAnimationRunning && this.selectedAlgorithmInstance) {
+      const steps = this.selectedAlgorithmInstance.steps;
+      // Animar cada uno de los pasos para crear la animación
+      if (this.animationStepIndex < steps.length) {
+        // Obtenemos un paso a la vez
+        const [arrayState, comparingIndices, swappingIndices] = steps[this.animationStepIndex];
+        // Obtener estado del arreglo en ese momento
+        this.barsHeight = arrayState;
+        this.animationStepIndex++;
+
+        setTimeout(() => {
+          this.isAlgorithmAnimationRunning = this.animationStepIndex < steps.length;
+        }, this.animationDelay);
+      }
+    }
   }
 
   /**
-   * 
+   * Dibuja las barras en el canvas
    */
   private draw(): void {
     const canvas = this.myCanvas.nativeElement;
@@ -126,10 +156,37 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
       // Clear the canvas
       this.context.clearRect(0, 0, canvas.width, canvas.height);
 
-      this.context.fillStyle = '#4f81c2'
-      for (let i = 0; i < this.numberOfBars; i++) {
-        this.context.fillRect(i * this.barWidth, 0, this.barWidth, this.barsHeight[i])
+      // Si se está ejecutando un algoritmo de ordenamiento
+      if (this.isAlgorithmAnimationRunning && this.selectedAlgorithmInstance) {
+        // Obtener el último paso
+        const steps = this.selectedAlgorithmInstance?.steps[this.animationStepIndex - 1];
+        // Obtener los indices que se estaban comparando
+        const comparingIndices = steps ? steps[1] : [];
+        // Obtener los indices que se intercambiaron
+        const swappingIndices = steps ? steps[2] : [];
+
+        for (let i = 0; i < this.numberOfBars; i++) {
+          // Asignar color en base al estado de la barra
+          if (comparingIndices.includes(i)) {
+            this.context.fillStyle = '#ffa500'; // Naranja para comparación
+          } else if (swappingIndices.includes(i)) {
+            this.context.fillStyle = '#ff0000'; // Rojo para intercambio
+          } else {
+            this.context.fillStyle = '#4f81c2'; // Azul por defecto
+          }
+
+          // Dibujar la barra
+          this.context.fillRect(i * this.barWidth, canvas.height - this.barsHeight[i], this.barWidth, this.barsHeight[i]);
+        }
+        return;
       }
+
+      this.context.fillStyle = '#4f81c2'; // Azul por defecto
+      for (let i = 0; i < this.numberOfBars; i++) {
+        // Dibujar la barra
+        this.context.fillRect(i * this.barWidth, canvas.height - this.barsHeight[i], this.barWidth, this.barsHeight[i]);
+      }
+
     }
   }
 
@@ -149,9 +206,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Intercambia de lugar dos elementos del arreglo
-   * @param array 
-   * @param index1 
-   * @param index2 
+   * @param index1 - Índice del primer elemento
+   * @param index2 - Índice del segundo elemento
    */
   swap(index1: number, index2: number): void {
     [this.barsHeight[index1], this.barsHeight[index2]] = [this.barsHeight[index2], this.barsHeight[index1]];
@@ -185,11 +241,17 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
+   * Cambia el algoritmo seleccionado y prepara la animación para el nuevo algoritmo
    * @param _event 
    */
   onAlgorithmChange(_event: Event) {
+    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
+    this.animationStepIndex = 0;
 
+    if (this.selectedAlgorithmInstance) {
+      this.selectedAlgorithmInstance.sort([...this.barsHeight]);
+      this.isAlgorithmAnimationRunning = true;
+    }
   }
 
 }
