@@ -30,15 +30,21 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   /* Algoritmo seleccionado en la lista */
   public selectedAlgorithm: string = 'mergeSort';
   private selectedAlgorithmInstance: SortingAlgorithm | null = null;
-
+  /* Diccionario de algoritmos */
   private algorithms: { [key: string]: SortingAlgorithm } = {
     mergeSort: new MergeSort()
   };
 
+  /* Para controlar las animaciones de los algoritmos */
   private isShuffleAnimationRunning: boolean = false;
   private isAlgorithmAnimationRunning: boolean = false;
   private animationStepIndex: number = 0;
   private animationDelay: number = 500;
+
+  /* Para activar o desactivar los controles */
+  public disableSelect = false;
+  public disableInputRange = false;
+  public disableShuffleButton = false;
 
   /**
    * Inicia el canvas y el event loop
@@ -101,6 +107,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     for (let i = 1; i <= this.numberOfBars; i++) {
       this.barsHeight[i - 1] = (i / this.numberOfBars) * canvasHeight;
     }
+    // Desordenar arreglo
     this.prepareShuffle();
   }
 
@@ -121,7 +128,6 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    * Actualiza la posición de los elementos en el canvas
    */
   private update(): void {
-    const canvas = this.myCanvas.nativeElement;
     // Si se está desordenando el arreglo
     if (this.isShuffleAnimationRunning && this.shuffleSteps.length > 0) {
       const [index1, index2] = this.shuffleSteps.shift()!;
@@ -129,6 +135,10 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
 
       setTimeout(() => {
         this.isShuffleAnimationRunning = this.shuffleSteps.length > 0;
+        // Activar controles una vez termine la animación
+        if (!this.isShuffleAnimationRunning) {
+          this.disableControls(false);
+        }
       }, this.shuffleDelay);
     }
 
@@ -145,6 +155,10 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
 
         setTimeout(() => {
           this.isAlgorithmAnimationRunning = this.animationStepIndex < steps.length;
+          // Activar controles una vez termine la animación
+          if (!this.isAlgorithmAnimationRunning) {
+            this.disableControls(false);
+          }
         }, this.animationDelay);
       }
     }
@@ -232,6 +246,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    */
   public onShuffleArrayBtnClick(_event: Event): void {
     this.prepareShuffle();
+    this.disableControls(true);
   }
 
   /**
@@ -251,11 +266,11 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     // Resetear los pasos de la animación
     this.animationStepIndex = 0;
     this.isAlgorithmAnimationRunning = false;
-    // Comprobar si el arreglo ya esta ordenado
+    // Comprobar si el arreglo ya está ordenado
     if (this.isSortedArray()) {
       return;
     }
-    // Comprobar si se selecciono un algoritmo existente
+    // Comprobar si se seleccionó un algoritmo existente
     this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
     if (!this.selectedAlgorithmInstance) {
       return;
@@ -265,20 +280,28 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     // Iniciar la animación si hay pasos
     if (this.selectedAlgorithmInstance.steps.length > 0) {
       this.isAlgorithmAnimationRunning = true;
+      this.disableControls(true);
     }
   }
 
   /**
-   * 
-   * @returns 
+   * Verifica si el arreglo ya esta ordenado de forma ascendente
+   * @returns true si ya esta ordenado, caso contrario false
    */
-  isSortedArray(): boolean {
+  private isSortedArray(): boolean {
     for (let i = 0; i < this.barsHeight.length - 1; i++) {
       if (this.barsHeight[i] >= this.barsHeight[i + 1])
         return false;
     }
 
     return true;
+  }
+
+  /**
+   * Desactiva o activa los controles de la UI según sea necesario
+   */
+  private disableControls(value: boolean): void {
+    this.disableSelect = this.disableInputRange = this.disableShuffleButton = value;
   }
 
 }

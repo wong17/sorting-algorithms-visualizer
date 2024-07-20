@@ -7,6 +7,7 @@
       <select
         [(ngModel)]="selectedAlgorithm"
         (change)="onAlgorithmChange($event)"
+        [disabled]="this.disableSelect"
       >
         <option value="mergeSort">MergeSort</option>
         <option value="quickSort">QuickSort</option>
@@ -23,10 +24,12 @@
         step="10"
         [(ngModel)]="numberOfBars"
         (input)="onBarsInputChange($event)"
+        [disabled]="this.disableInputRange"
       />
       <button
         class="button button--shuffle_aray"
         (click)="onShuffleArrayBtnClick($event)"
+        [disabled]="this.disableShuffleButton"
       >
         Shuffle array
       </button>
