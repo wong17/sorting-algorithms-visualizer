@@ -60,17 +60,17 @@ export class QuickSort extends SortingAlgorithm {
       this.steps.push([[...array], [j, right], []]);
       if (array[j] < pivotValue) {
         i++;
+        [array[i], array[j]] = [array[j], array[i]];
         // Registrar el estado actual del arreglo y el indice del intercambio
         this.steps.push([[...array], [], [i]]);
-        [array[i], array[j]] = [array[j], array[i]];
       }
     }
 
-    // Registrar el estado del arreglo después de la partición
-    this.steps.push([[...array], [right], [i + 1]]);
     // Colocar el pivote en su posición final de modo que el arreglo ahora esta dividido
     // con elementos menores al pivote a su izquierda y mayores que el pivote a su derecha
     [array[i + 1], array[right]] = [array[right], array[i + 1]];
+    // Registrar el estado del arreglo después de la partición
+    this.steps.push([[...array], [right], [i + 1]]);
 
     return i + 1;
   }
