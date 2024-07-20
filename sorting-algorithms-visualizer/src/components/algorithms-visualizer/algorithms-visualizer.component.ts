@@ -129,7 +129,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    */
   private update(): void {
     // Si se está desordenando el arreglo
-    if (this.isShuffleAnimationRunning && this.shuffleSteps.length > 0) {
+    if (this.isShuffleAnimationActive()) {
       const [index1, index2] = this.shuffleSteps.shift()!;
       this.swap(index1, index2);
 
@@ -246,7 +246,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    */
   public onShuffleArrayBtnClick(_event: Event): void {
     this.prepareShuffle();
-    this.disableControls(true);
+    // Desactivar select que contiene algoritmos de ordenamiento mientras se realiza la animación
+    this.disableSelect = true;
   }
 
   /**
@@ -256,6 +257,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   onBarsInputChange(_event: Event): void {
     this.setupBars();
     this.draw();
+    // Desactivar select que contiene algoritmos de ordenamiento mientras se realiza la animación
+    this.disableSelect = true;
   }
 
   /**
@@ -280,6 +283,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     // Iniciar la animación si hay pasos
     if (this.selectedAlgorithmInstance.steps.length > 0) {
       this.isAlgorithmAnimationRunning = true;
+      // Desactivar todos los controles mientras esta la animación
       this.disableControls(true);
     }
   }
@@ -302,6 +306,14 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    */
   private disableControls(value: boolean): void {
     this.disableSelect = this.disableInputRange = this.disableShuffleButton = value;
+  }
+
+  /**
+   * Verifica si hay pasos restantes para la animación de desordenamiento.
+   * @returns true si la animación de desordenamiento está activa y tiene pasos restantes.
+   */
+  private isShuffleAnimationActive(): boolean {
+    return this.isShuffleAnimationRunning && this.shuffleSteps.length > 0;
   }
 
 }
