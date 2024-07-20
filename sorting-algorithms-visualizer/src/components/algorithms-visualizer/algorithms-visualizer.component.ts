@@ -96,9 +96,12 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     this.barWidth = this.myCanvas.nativeElement.width / this.numberOfBars;
     // Obtener altura del canvas
     const canvasHeight = this.myCanvas.nativeElement.height;
+    // Resetear cantidad de barras
+    this.barsHeight = [];
     for (let i = 1; i <= this.numberOfBars; i++) {
       this.barsHeight[i - 1] = (i / this.numberOfBars) * canvasHeight;
     }
+    this.prepareShuffle();
   }
 
   /**
@@ -134,8 +137,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
       const steps = this.selectedAlgorithmInstance.steps;
       // Animar cada uno de los pasos para crear la animación
       if (this.animationStepIndex < steps.length) {
-        // Obtenemos un paso a la vez
-        const [arrayState, comparingIndices, swappingIndices] = steps[this.animationStepIndex];
+        // Obtenemos el estado del arreglo en cada paso
+        const [arrayState] = steps[this.animationStepIndex];
         // Obtener estado del arreglo en ese momento
         this.barsHeight = arrayState;
         this.animationStepIndex++;
@@ -245,13 +248,37 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    * @param _event 
    */
   onAlgorithmChange(_event: Event) {
-    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
+    // Resetear los pasos de la animación
     this.animationStepIndex = 0;
-
-    if (this.selectedAlgorithmInstance) {
-      this.selectedAlgorithmInstance.sort([...this.barsHeight]);
+    this.isAlgorithmAnimationRunning = false;
+    // Comprobar si el arreglo ya esta ordenado
+    if (this.isSortedArray()) {
+      return;
+    }
+    // Comprobar si se selecciono un algoritmo existente
+    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
+    if (!this.selectedAlgorithmInstance) {
+      return;
+    }
+    // Ordenar el arreglo y generar pasos
+    this.selectedAlgorithmInstance.sort([...this.barsHeight]);
+    // Iniciar la animación si hay pasos
+    if (this.selectedAlgorithmInstance.steps.length > 0) {
       this.isAlgorithmAnimationRunning = true;
     }
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  isSortedArray(): boolean {
+    for (let i = 0; i < this.barsHeight.length - 1; i++) {
+      if (this.barsHeight[i] >= this.barsHeight[i + 1])
+        return false;
+    }
+
+    return true;
   }
 
 }
