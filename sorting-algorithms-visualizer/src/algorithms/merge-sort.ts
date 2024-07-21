@@ -3,7 +3,7 @@ import { SortingAlgorithm } from "./sorting-algorithm";
 export class MergeSort extends SortingAlgorithm {
 
   /**
-   * Inicia el proceso de ordenamiento usando merge sort.
+   * Inicia el proceso de ordenamiento usando Merge sort.
    * Reinicia el historial de pasos y llama a la función recursiva de merge sort.
    * 
    * @param array - El arreglo a ordenar.

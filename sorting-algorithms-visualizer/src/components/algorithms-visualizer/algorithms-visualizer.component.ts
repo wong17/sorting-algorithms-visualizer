@@ -5,6 +5,7 @@ import { MergeSort } from '../../algorithms/merge-sort';
 import { QuickSort } from '../../algorithms/quick-sort';
 import { InsertionSort } from '../../algorithms/insertion-sort';
 import { SelectionSort } from '../../algorithms/selection-sort';
+import { BubbleSort } from '../../algorithms/bubble-sort';
 
 @Component({
   selector: 'app-algorithms-visualizer',
@@ -38,14 +39,15 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     mergeSort: new MergeSort(),
     quickSort: new QuickSort(),
     insertionSort: new InsertionSort(),
-    selectionSort: new SelectionSort()
+    selectionSort: new SelectionSort(),
+    bubbleSort: new BubbleSort()
   };
 
   /* Para controlar las animaciones de los algoritmos */
   private isShuffleAnimationRunning: boolean = false;
   private isAlgorithmAnimationRunning: boolean = false;
   private animationStepIndex: number = 0;
-  private animationDelay: number = 500;
+  private animationDelay: number = 100;
 
   /* Para activar o desactivar los controles */
   public disableSelect = false;

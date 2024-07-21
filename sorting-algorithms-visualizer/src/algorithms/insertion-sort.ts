@@ -3,7 +3,7 @@ import { SortingAlgorithm } from "./sorting-algorithm";
 export class InsertionSort extends SortingAlgorithm {
 
   /**
-   * Inicia el proceso de ordenamiento usando el algoritmo de Insertion Sort.
+   * Inicia el proceso de ordenamiento usando el algoritmo Insertion Sort.
    * Reinicia el historial de pasos y llama a la función insertionSort.
    * 
    * @param array - El arreglo a ordenar.
@@ -16,7 +16,7 @@ export class InsertionSort extends SortingAlgorithm {
   }
 
   /**
-   * Ordena el arreglo usando el algoritmo de Insertion Sort.
+   * Ordena el arreglo usando el algoritmo Insertion Sort.
    * 
    * @param array - El arreglo a ordenar.
    * @param n - La longitud del arreglo.

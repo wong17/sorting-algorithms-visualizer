@@ -3,7 +3,7 @@ import { SortingAlgorithm } from "./sorting-algorithm";
 export class SelectionSort extends SortingAlgorithm {
 
   /**
-   * Inicia el proceso de ordenamiento usando el algoritmo de Selection Sort.
+   * Inicia el proceso de ordenamiento usando el algoritmo Selection Sort.
    * Reinicia el historial de pasos y llama a la función selectionSort.
    * 
    * @param array - El arreglo a ordenar.
@@ -16,7 +16,7 @@ export class SelectionSort extends SortingAlgorithm {
   }
 
   /**
-   * Ordena el arreglo usando el algoritmo de Selection Sort.
+   * Ordena el arreglo usando el algoritmo Selection Sort.
    * 
    * @param array - El arreglo a ordenar.
    * @param n - La longitud del arreglo.

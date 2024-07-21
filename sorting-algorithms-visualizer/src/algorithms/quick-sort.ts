@@ -3,7 +3,7 @@ import { SortingAlgorithm } from "./sorting-algorithm";
 export class QuickSort extends SortingAlgorithm {
 
   /**
-   * Inicia el proceso de ordenamiento usando quick sort.
+   * Inicia el proceso de ordenamiento usando Quick sort.
    * Reinicia el historial de pasos y llama a la función quick sort.
    * 
    * @param array - El arreglo a ordenar.
