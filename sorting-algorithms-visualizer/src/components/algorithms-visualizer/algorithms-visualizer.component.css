@@ -45,20 +45,40 @@
 
 input[type=range] {
   width: 130px;
+  cursor: pointer;
+}
+
+input:disabled {
+  cursor: not-allowed;
 }
 
 select {
   width: 200px;
   font-size: 14px;
   height: 30px;
+  border: none;
+  outline: none;
   border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+select:disabled {
+  cursor: not-allowed;
 }
 
 .button {
   font-size: 14px;
-  height: 30px;
+  height: 35px;
   border-radius: 8px;
   width: 100px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  background-color: #bababa;
 }
 
 .button--shuffle_aray {
