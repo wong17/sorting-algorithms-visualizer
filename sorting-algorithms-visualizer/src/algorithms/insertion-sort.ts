@@ -23,7 +23,6 @@ export class InsertionSort extends SortingAlgorithm {
    * @returns - El arreglo ordenado.
    */
   private insertionSort(array: number[], n: number): number[] {
-    // Iterar sobre cada elemento del arreglo a partir del segundo
     for (let i = 0; i < n; i++) {
       let tempElement = array[i]; // Guardar el elemento actual
       let j = i - 1;
@@ -35,13 +34,16 @@ export class InsertionSort extends SortingAlgorithm {
       while (j >= 0 && array[j] > tempElement) {
         // Registrar el estado del arreglo y los indices que se estaban comparando
         this.steps.push([[...array], [j, i], []]);
+
         array[j + 1] = array[j];
         j--;
+
         // Registrar el estado del arreglo y el indice donde se mueve el elemento
         this.steps.push([[...array], [], [j + 1]]);
       }
       // Insertar el elemento temporal en la posición correcta
       array[j + 1] = tempElement;
+      
       // Registrar el estado después de insertar la clave
       this.steps.push([[...array], [], [j + 1]]);
     }

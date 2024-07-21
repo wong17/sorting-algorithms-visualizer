@@ -1,3 +1,4 @@
+import { ArrayUtil } from "../util/array-util";
 import { SortingAlgorithm } from "./sorting-algorithm";
 
 export class BubbleSort extends SortingAlgorithm {
@@ -28,9 +29,11 @@ export class BubbleSort extends SortingAlgorithm {
       for (let j = 0; j < n - 1 - i; j++) {
         // Registrar el estado actual del arreglo y los índices comparados
         this.steps.push([[...array], [j, j + 1], []]);
+
         if (array[j] > array[j + 1]) {
           // Intercambiar si el elemento actual es mayor que el siguiente
-          [array[j], array[j + 1]] = [array[j + 1], array[j]];
+          ArrayUtil.swap(array, j, j + 1);
+
           // Registrar el estado después del intercambio
           this.steps.push([[...array], [], [j]]);
         }

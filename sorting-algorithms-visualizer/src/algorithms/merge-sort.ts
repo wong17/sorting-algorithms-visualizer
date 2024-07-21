@@ -72,6 +72,7 @@ export class MergeSort extends SortingAlgorithm {
     while (i < n1 && j < n2) {
       // Agregar el estado actual del arreglo y los índices comparados a los pasos 
       this.steps.push([[...array], [left + i, mid + 1 + j], []]);
+
       if (leftArray[i] <= rightArray[j]) {
         array[k] = leftArray[i];
         i++;
@@ -80,6 +81,7 @@ export class MergeSort extends SortingAlgorithm {
         array[k] = rightArray[j];
         j++;
       }
+
       // Agregar el estado actual del arreglo y el índice intercambiado a los pasos
       this.steps.push([[...array], [], [k]]);
       k++;
@@ -89,9 +91,12 @@ export class MergeSort extends SortingAlgorithm {
     while (i < n1) {
       // Agregar el estado actual del arreglo y el índice comparado a los pasos
       this.steps.push([[...array], [left + i], []]);
+
       array[k] = leftArray[i];
+
       // Agregar el estado actual del arreglo y el índice intercambiado a los pasos
       this.steps.push([[...array], [], [k]]);
+      
       i++;
       k++;
     }
@@ -99,9 +104,12 @@ export class MergeSort extends SortingAlgorithm {
     while (j < n2) {
       // Agregar el estado actual del arreglo y el índice comparado a los pasos
       this.steps.push([[...array], [mid + 1 + j], []]);
+
       array[k] = rightArray[j];
+
       // Agregar el estado actual del arreglo y el índice intercambiado a los pasos
       this.steps.push([[...array], [], [k]]);
+
       j++;
       k++;
     }

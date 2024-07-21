@@ -1,3 +1,4 @@
+import { ArrayUtil } from "../util/array-util";
 import { SortingAlgorithm } from "./sorting-algorithm";
 
 export class SelectionSort extends SortingAlgorithm {
@@ -31,12 +32,14 @@ export class SelectionSort extends SortingAlgorithm {
       for (let j = i + 1; j < n; j++) {
         // Registrar el estado actual del arreglo y los índices comparados
         this.steps.push([[...array], [min, j], []]);
+
         if (array[j] < array[min]) {
           min = j;
         }
       }
       // Intercambiar el elemento actual con el elemento mínimo encontrado
-      [array[i], array[min]] = [array[min], array[i]];
+      ArrayUtil.swap(array, i, min);
+
       // Registrar el estado del arreglo después del intercambio
       this.steps.push([[...array], [], [i, min]]);
     }

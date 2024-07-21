@@ -1,3 +1,4 @@
+import { ArrayUtil } from "../util/array-util";
 import { SortingAlgorithm } from "./sorting-algorithm";
 
 export class QuickSort extends SortingAlgorithm {
@@ -29,8 +30,10 @@ export class QuickSort extends SortingAlgorithm {
     }
     // Obtener el índice de partición
     const pivotIndex = this.partition(array, left, right);
+
     // Registrar el estado actual del arreglo
     this.steps.push([[...array], [left, right], [pivotIndex]]);
+
     // Ordenar las sublistas a la izquierda y derecha del pivote
     this.quickSort(array, left, pivotIndex - 1);
     this.quickSort(array, pivotIndex + 1, right);
@@ -56,11 +59,14 @@ export class QuickSort extends SortingAlgorithm {
     // Reordenar arreglo, intercambiando elementos que sean menores que el pivote con
     // elementos previamente visitados que eran mayores al pivote
     for (let j = left; j <= right - 1; j++) {
+
       // Registrar el estado actual del arreglo y los indices que se estan comparando
       this.steps.push([[...array], [j, right], []]);
+
       if (array[j] < pivotValue) {
         i++;
-        [array[i], array[j]] = [array[j], array[i]];
+        ArrayUtil.swap(array, i, j);
+
         // Registrar el estado actual del arreglo y el indice del intercambio
         this.steps.push([[...array], [], [i]]);
       }
@@ -68,7 +74,8 @@ export class QuickSort extends SortingAlgorithm {
 
     // Colocar el pivote en su posición final de modo que el arreglo ahora esta dividido
     // con elementos menores al pivote a su izquierda y mayores que el pivote a su derecha
-    [array[i + 1], array[right]] = [array[right], array[i + 1]];
+    ArrayUtil.swap(array, i + 1, right);
+
     // Registrar el estado del arreglo después de la partición
     this.steps.push([[...array], [right], [i + 1]]);
 

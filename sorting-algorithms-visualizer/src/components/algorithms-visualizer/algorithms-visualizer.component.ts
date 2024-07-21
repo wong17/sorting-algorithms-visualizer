@@ -7,6 +7,7 @@ import { InsertionSort } from '../../algorithms/insertion-sort';
 import { SelectionSort } from '../../algorithms/selection-sort';
 import { BubbleSort } from '../../algorithms/bubble-sort';
 import { ColorUtil } from '../../util/color-util';
+import { ArrayUtil } from '../../util/array-util';
 
 @Component({
   selector: 'app-algorithms-visualizer',
@@ -150,7 +151,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     // Si se está desordenando el arreglo
     if (this.isShuffleAnimationActive()) {
       const [index1, index2] = this.shuffleSteps.shift()!;
-      this.swap(index1, index2);
+      ArrayUtil.swap(this.barsHeight, index1, index2);
 
       setTimeout(() => {
         this.isShuffleAnimationRunning = this.shuffleSteps.length > 0;
@@ -231,23 +232,9 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    * Implementación de Fisher-Yates Sorting Algorithm
    */
   private prepareShuffle(): void {
-    this.shuffleSteps = [];
     // Se genera el paso a paso de elementos a intercambiar en el arreglo para crear la animación
-    for (let i = this.barsHeight.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      this.shuffleSteps.push([i, j]);
-    }
-
+    this.shuffleSteps = ArrayUtil.prepareShuffle(this.barsHeight);
     this.isShuffleAnimationRunning = true;
-  }
-
-  /**
-   * Intercambia de lugar dos elementos del arreglo
-   * @param index1 - Índice del primer elemento
-   * @param index2 - Índice del segundo elemento
-   */
-  swap(index1: number, index2: number): void {
-    [this.barsHeight[index1], this.barsHeight[index2]] = [this.barsHeight[index2], this.barsHeight[index1]];
   }
 
   /**
@@ -290,13 +277,18 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
   }
 
+  /**
+   * Inicia la animación de ordenamiento
+   * @param _event 
+   * @returns 
+   */
   onSortBtnClick(_event: Event) {
     // Comprobar si se seleccionó un algoritmo existente
     if (!this.selectedAlgorithmInstance) {
       return;
     }
     // Comprobar si el arreglo ya está ordenado
-    if (this.isSortedArray()) {
+    if (ArrayUtil.isSorted(this.barsHeight)) {
       return;
     }
     // Resetear los pasos de la animación
@@ -309,19 +301,6 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
       // Desactivar todos los controles mientras esta la animación
       this.disableControls(true);
     }
-  }
-
-  /**
-   * Verifica si el arreglo ya esta ordenado de forma ascendente
-   * @returns true si ya esta ordenado, caso contrario false
-   */
-  private isSortedArray(): boolean {
-    for (let i = 0; i < this.barsHeight.length - 1; i++) {
-      if (this.barsHeight[i] >= this.barsHeight[i + 1])
-        return false;
-    }
-
-    return true;
   }
 
   /**
