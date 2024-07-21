@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlgorithmsVisualizerComponent } from './algorithms-visualizer.component';
+import { RectangularBarsVisualizerComponent } from './rectangular-bars-visualizer.component';
 
 describe('AlgorithmsVisualizerComponent', () => {
-  let component: AlgorithmsVisualizerComponent;
-  let fixture: ComponentFixture<AlgorithmsVisualizerComponent>;
+  let component: RectangularBarsVisualizerComponent;
+  let fixture: ComponentFixture<RectangularBarsVisualizerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AlgorithmsVisualizerComponent]
+      imports: [RectangularBarsVisualizerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AlgorithmsVisualizerComponent);
+    fixture = TestBed.createComponent(RectangularBarsVisualizerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

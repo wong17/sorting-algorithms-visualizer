@@ -6,13 +6,13 @@ import { ArrayUtil } from '../../util/array-util';
 import { SortingAlgorithmManager } from '../../algorithms/sorting-algorithm-manager';
 
 @Component({
-  selector: 'app-algorithms-visualizer',
+  selector: 'app-rectangular-bars-visualizer',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './algorithms-visualizer.component.html',
-  styleUrl: './algorithms-visualizer.component.css'
+  templateUrl: './rectangular-bars-visualizer.component.html',
+  styleUrl: './rectangular-bars-visualizer.component.css'
 })
-export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
+export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('myCanvas', { static: true }) myCanvas!: ElementRef<HTMLCanvasElement>;
   private context!: CanvasRenderingContext2D | null;
