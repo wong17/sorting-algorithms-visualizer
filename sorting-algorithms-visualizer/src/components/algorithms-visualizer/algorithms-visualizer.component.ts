@@ -203,7 +203,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
 
         const maxBarHeight = Math.max(...this.barsHeight);
         for (let i = 0; i < this.numberOfBars; i++) {
-          // Asignar color en base al estado de la barra
+          // Asignar color en base al estado y altura de la barra
           if (comparingIndices.includes(i)) {
             this.context.fillStyle = this.comparingColor;
           } else if (swappingIndices.includes(i)) {
@@ -212,7 +212,6 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
             this.context.fillStyle = ColorUtil.getColorForHeight(this.barsHeight[i], maxBarHeight, this.startColor, this.endColor);
           }
 
-          // Dibujar la barra
           this.context.fillRect(i * this.barWidth, canvas.height - this.barsHeight[i], this.barWidth, this.barsHeight[i]);
         }
         return;
@@ -220,9 +219,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
 
       const maxBarHeight = Math.max(...this.barsHeight);
       for (let i = 0; i < this.numberOfBars; i++) {
-        // Asignar color en base al índice
+        // Asignar color en base a la altura de la barra
         this.context.fillStyle = ColorUtil.getColorForHeight(this.barsHeight[i], maxBarHeight, this.startColor, this.endColor);
-        // Dibujar la barra
         this.context.fillRect(i * this.barWidth, canvas.height - this.barsHeight[i], this.barWidth, this.barsHeight[i]);
       }
 
