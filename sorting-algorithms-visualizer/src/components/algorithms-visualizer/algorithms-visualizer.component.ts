@@ -1,13 +1,9 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SortingAlgorithm } from '../../algorithms/sorting-algorithm';
-import { MergeSort } from '../../algorithms/merge-sort';
-import { QuickSort } from '../../algorithms/quick-sort';
-import { InsertionSort } from '../../algorithms/insertion-sort';
-import { SelectionSort } from '../../algorithms/selection-sort';
-import { BubbleSort } from '../../algorithms/bubble-sort';
 import { ColorUtil } from '../../util/color-util';
 import { ArrayUtil } from '../../util/array-util';
+import { SortingAlgorithmManager } from '../../algorithms/sorting-algorithm-manager';
 
 @Component({
   selector: 'app-algorithms-visualizer',
@@ -36,14 +32,6 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   /* Algoritmo seleccionado en la lista */
   public selectedAlgorithm: string = 'quickSort';
   private selectedAlgorithmInstance: SortingAlgorithm | null = null;
-  /* Diccionario de algoritmos */
-  private algorithms: { [key: string]: SortingAlgorithm } = {
-    quickSort: new QuickSort(),
-    mergeSort: new MergeSort(),
-    insertionSort: new InsertionSort(),
-    selectionSort: new SelectionSort(),
-    bubbleSort: new BubbleSort()
-  };
 
   /* Para controlar las animaciones de los algoritmos */
   private isShuffleAnimationRunning: boolean = false;
@@ -72,7 +60,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     this.setupBars();
     this.animate();
     // Por defecto esta seleccionado el quickSort
-    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
+    this.selectedAlgorithmInstance = SortingAlgorithmManager.getAlgorithmInstance(this.selectedAlgorithm);
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
@@ -269,12 +257,11 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Cambia el algoritmo seleccionado y prepara la animación para el nuevo algoritmo
+   * Cambia al algoritmo seleccionado desde el select
    * @param _event 
    */
   onAlgorithmChange(_event: Event) {
-    // Seleccionar un algoritmo de ordenamiento
-    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
+    this.selectedAlgorithmInstance = SortingAlgorithmManager.getAlgorithmInstance(this.selectedAlgorithm);
   }
 
   /**
