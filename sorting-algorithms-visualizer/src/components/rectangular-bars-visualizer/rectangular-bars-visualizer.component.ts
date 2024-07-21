@@ -4,6 +4,7 @@ import { SortingAlgorithm } from '../../algorithms/sorting-algorithm';
 import { ColorUtil } from '../../util/color-util';
 import { ArrayUtil } from '../../util/array-util';
 import { SortingAlgorithmManager } from '../../algorithms/sorting-algorithm-manager';
+import { AudioUtil } from '../../util/audio-util';
 
 @Component({
   selector: 'app-rectangular-bars-visualizer',
@@ -20,14 +21,14 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
   private readonly canvasPadding: number = 0.12;
 
   /* Cantidad de barras a dibujar */
-  public numberOfBars: number = 100;
+  public numberOfBars: number = 200;
   /* Ancho de las barras */
   private barWidth: number = 0;
   /* Altura de las barras */
   private barsHeight: number[] = [];
   /* Tupla que contiene el paso a paso de la animación al intercambiar elementos del arreglo */
   private shuffleSteps: [number, number][] = [];
-  private shuffleDelay: number = 500;
+  private shuffleDelay: number = 100;
 
   /* Algoritmo seleccionado en la lista */
   public selectedAlgorithm: string = 'quickSort';
@@ -51,6 +52,9 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
   /* Colores para comparación e intercambio */
   private readonly comparingColor = 'rgb(225, 115, 4)'; // Naranja
   private readonly swappingColor = 'rgb(238, 46, 75)'; // Rojo
+
+  private readonly soundStartFrequency = 200;
+  private readonly soundEndFrequency = 500;
 
   /**
    * Inicia el canvas y el event loop
@@ -139,7 +143,15 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
     // Si se está desordenando el arreglo
     if (this.isShuffleAnimationActive()) {
       const [index1, index2] = this.shuffleSteps.shift()!;
+      const maxBarHeight = Math.max(...this.barsHeight);
       ArrayUtil.swap(this.barsHeight, index1, index2);
+
+      // Reproduce sonidos con interpolación basada en la altura de las barras
+      AudioUtil.playInterpolatedSound(
+        this.soundStartFrequency + (this.barsHeight[index1] / maxBarHeight) * this.soundEndFrequency,
+        this.soundStartFrequency + (this.barsHeight[index2] / maxBarHeight) * this.soundEndFrequency,
+        0.05
+      );
 
       setTimeout(() => {
         this.isShuffleAnimationRunning = this.shuffleSteps.length > 0;
@@ -156,10 +168,24 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
       // Animar cada uno de los pasos para crear la animación
       if (this.animationStepIndex < steps.length) {
         // Obtenemos el estado del arreglo en cada paso
-        const [arrayState] = steps[this.animationStepIndex];
+        const [arrayState, comparingIndices, swappingIndices] = steps[this.animationStepIndex];
+        const maxBarHeight = Math.max(...this.barsHeight);
         // Obtener estado del arreglo en ese momento
         this.barsHeight = arrayState;
         this.animationStepIndex++;
+        
+        // Reproducir sonido
+        if (comparingIndices.length > 1) {
+          // Interpolación entre frecuencias según la altura de las barras comparadas
+          const startFreq = this.soundStartFrequency + (this.barsHeight[comparingIndices[0]] / maxBarHeight) * this.soundEndFrequency;
+          const endFreq = this.soundStartFrequency + (this.barsHeight[comparingIndices[1]] / maxBarHeight) * this.soundEndFrequency;
+          AudioUtil.playInterpolatedSound(startFreq, endFreq, 0.05);
+        } else if (swappingIndices.length > 1) {
+          // Interpolación entre frecuencias según la altura de las barras intercambiadas
+          const startFreq = this.soundStartFrequency + (this.barsHeight[swappingIndices[0]] / maxBarHeight) * this.soundEndFrequency;
+          const endFreq = this.soundStartFrequency + (this.barsHeight[swappingIndices[1]] / maxBarHeight) * this.soundEndFrequency;
+          AudioUtil.playInterpolatedSound(startFreq, endFreq, 0.05);
+        }
 
         setTimeout(() => {
           this.isAlgorithmAnimationRunning = this.animationStepIndex < steps.length;
