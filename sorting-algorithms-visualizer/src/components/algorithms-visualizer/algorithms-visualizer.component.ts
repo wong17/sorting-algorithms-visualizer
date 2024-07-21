@@ -36,8 +36,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   private selectedAlgorithmInstance: SortingAlgorithm | null = null;
   /* Diccionario de algoritmos */
   private algorithms: { [key: string]: SortingAlgorithm } = {
-    mergeSort: new MergeSort(),
     quickSort: new QuickSort(),
+    mergeSort: new MergeSort(),
     insertionSort: new InsertionSort(),
     selectionSort: new SelectionSort(),
     bubbleSort: new BubbleSort()
@@ -53,6 +53,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   public disableSelect = false;
   public disableInputRange = false;
   public disableShuffleButton = false;
+  public disableSortButton = false;
 
   /**
    * Inicia el canvas y el event loop
@@ -61,6 +62,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
     this.setupCanvas();
     this.setupBars();
     this.animate();
+    // Por defecto esta seleccionado el quickSort
+    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
@@ -274,18 +277,21 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    * @param _event 
    */
   onAlgorithmChange(_event: Event) {
-    // Resetear los pasos de la animación
-    this.animationStepIndex = 0;
-    this.isAlgorithmAnimationRunning = false;
+    // Seleccionar un algoritmo de ordenamiento
+    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
+  }
+
+  onSortBtnClick(_event: Event) {
+    // Comprobar si se seleccionó un algoritmo existente
+    if (!this.selectedAlgorithmInstance) {
+      return;
+    }
     // Comprobar si el arreglo ya está ordenado
     if (this.isSortedArray()) {
       return;
     }
-    // Comprobar si se seleccionó un algoritmo existente
-    this.selectedAlgorithmInstance = this.algorithms[this.selectedAlgorithm];
-    if (!this.selectedAlgorithmInstance) {
-      return;
-    }
+    // Resetear los pasos de la animación
+    this.animationStepIndex = 0;
     // Ordenar el arreglo y generar pasos
     this.selectedAlgorithmInstance.sort([...this.barsHeight]);
     // Iniciar la animación si hay pasos
@@ -313,7 +319,7 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    * Desactiva o activa los controles de la UI según sea necesario
    */
   private disableControls(value: boolean): void {
-    this.disableSelect = this.disableInputRange = this.disableShuffleButton = value;
+    this.disableSelect = this.disableInputRange = this.disableShuffleButton = this.disableSortButton = value;
   }
 
   /**

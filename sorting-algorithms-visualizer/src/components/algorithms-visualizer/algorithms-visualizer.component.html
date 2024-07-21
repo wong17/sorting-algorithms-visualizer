@@ -3,7 +3,7 @@
   <div class="container__header">
     <!---->
     <div class="container__algorithms">
-      <h3>Algorithms:</h3>
+      <h3>Algorithms</h3>
       <select
         [(ngModel)]="selectedAlgorithm"
         (change)="onAlgorithmChange($event)"
@@ -18,7 +18,7 @@
     </div>
     <!---->
     <div class="container__options">
-      <h3>Options:</h3>
+      <h3>Elements</h3>
       <input
         type="range"
         min="10"
@@ -34,6 +34,13 @@
         [disabled]="this.disableShuffleButton"
       >
         Shuffle array
+      </button>
+      <button
+        class="button"
+        (click)="onSortBtnClick($event)"
+        [disabled]="this.disableSortButton"
+      >
+        Sort
       </button>
     </div>
   </div>
