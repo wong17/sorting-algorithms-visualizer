@@ -6,6 +6,7 @@ import { QuickSort } from '../../algorithms/quick-sort';
 import { InsertionSort } from '../../algorithms/insertion-sort';
 import { SelectionSort } from '../../algorithms/selection-sort';
 import { BubbleSort } from '../../algorithms/bubble-sort';
+import { ColorUtil } from '../../util/color-util';
 
 @Component({
   selector: 'app-algorithms-visualizer',
@@ -54,6 +55,13 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
   public disableInputRange = false;
   public disableShuffleButton = false;
   public disableSortButton = false;
+
+  /* Colores para el gradiente */
+  private startColor = { r: 51, g: 233, b: 255 };
+  private endColor = { r: 91, g: 51, b: 255 };
+  /* Colores para comparación e intercambio */
+  private readonly comparingColor = 'rgb(225, 115, 4)'; // Naranja
+  private readonly swappingColor = 'rgb(238, 46, 75)'; // Rojo
 
   /**
    * Inicia el canvas y el event loop
@@ -180,8 +188,8 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
    */
   private draw(): void {
     const canvas = this.myCanvas.nativeElement;
+
     if (this.context) {
-      // Clear the canvas
       this.context.clearRect(0, 0, canvas.width, canvas.height);
 
       // Si se está ejecutando un algoritmo de ordenamiento
@@ -193,14 +201,15 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
         // Obtener los indices que se intercambiaron
         const swappingIndices = steps ? steps[2] : [];
 
+        const maxBarHeight = Math.max(...this.barsHeight);
         for (let i = 0; i < this.numberOfBars; i++) {
           // Asignar color en base al estado de la barra
           if (comparingIndices.includes(i)) {
-            this.context.fillStyle = 'rgb(225 115 4)'; // Naranja para comparación
+            this.context.fillStyle = this.comparingColor;
           } else if (swappingIndices.includes(i)) {
-            this.context.fillStyle = 'rgb(238 46 75)'; // Rojo para intercambio
+            this.context.fillStyle = this.swappingColor;
           } else {
-            this.context.fillStyle = this.getColorForHeight(this.barsHeight[i]); // Azul por defecto
+            this.context.fillStyle = ColorUtil.getColorForHeight(this.barsHeight[i], maxBarHeight, this.startColor, this.endColor);
           }
 
           // Dibujar la barra
@@ -209,33 +218,15 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
         return;
       }
 
+      const maxBarHeight = Math.max(...this.barsHeight);
       for (let i = 0; i < this.numberOfBars; i++) {
         // Asignar color en base al índice
-        this.context.fillStyle = this.getColorForHeight(this.barsHeight[i]); // Degradado de color
+        this.context.fillStyle = ColorUtil.getColorForHeight(this.barsHeight[i], maxBarHeight, this.startColor, this.endColor);
         // Dibujar la barra
         this.context.fillRect(i * this.barWidth, canvas.height - this.barsHeight[i], this.barWidth, this.barsHeight[i]);
       }
 
     }
-  }
-
-  /**
-   * Genera un color RGB en base a la altura de la barra, interpolando entre dos colores.
-   * @param height Altura de la barra
-   * @returns Color en formato RGB
-   */
-  private getColorForHeight(height: number): string {
-    const startColor = { r: 51, g: 233, b: 255 };
-    const endColor = { r: 91, g: 51, b: 255 };
-
-    const maxBarHeight = Math.max(...this.barsHeight);
-    const ratio = height / maxBarHeight;
-
-    const r = Math.floor(startColor.r + ratio * (endColor.r - startColor.r));
-    const g = Math.floor(startColor.g + ratio * (endColor.g - startColor.g));
-    const b = Math.floor(startColor.b + ratio * (endColor.b - startColor.b));
-
-    return `rgb(${r}, ${g}, ${b})`;
   }
 
   /**
