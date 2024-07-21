@@ -196,11 +196,11 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
         for (let i = 0; i < this.numberOfBars; i++) {
           // Asignar color en base al estado de la barra
           if (comparingIndices.includes(i)) {
-            this.context.fillStyle = '#ffa500'; // Naranja para comparación
+            this.context.fillStyle = 'rgb(225 115 4)'; // Naranja para comparación
           } else if (swappingIndices.includes(i)) {
-            this.context.fillStyle = '#ff0000'; // Rojo para intercambio
+            this.context.fillStyle = 'rgb(238 46 75)'; // Rojo para intercambio
           } else {
-            this.context.fillStyle = '#4f81c2'; // Azul por defecto
+            this.context.fillStyle = this.getColorForHeight(this.barsHeight[i]); // Azul por defecto
           }
 
           // Dibujar la barra
@@ -209,13 +209,33 @@ export class AlgorithmsVisualizerComponent implements AfterViewInit, OnDestroy {
         return;
       }
 
-      this.context.fillStyle = '#4f81c2'; // Azul por defecto
       for (let i = 0; i < this.numberOfBars; i++) {
+        // Asignar color en base al índice
+        this.context.fillStyle = this.getColorForHeight(this.barsHeight[i]); // Degradado de color
         // Dibujar la barra
         this.context.fillRect(i * this.barWidth, canvas.height - this.barsHeight[i], this.barWidth, this.barsHeight[i]);
       }
 
     }
+  }
+
+  /**
+   * Genera un color RGB en base a la altura de la barra, interpolando entre dos colores.
+   * @param height Altura de la barra
+   * @returns Color en formato RGB
+   */
+  private getColorForHeight(height: number): string {
+    const startColor = { r: 51, g: 233, b: 255 };
+    const endColor = { r: 91, g: 51, b: 255 };
+
+    const maxBarHeight = Math.max(...this.barsHeight);
+    const ratio = height / maxBarHeight;
+
+    const r = Math.floor(startColor.r + ratio * (endColor.r - startColor.r));
+    const g = Math.floor(startColor.g + ratio * (endColor.g - startColor.g));
+    const b = Math.floor(startColor.b + ratio * (endColor.b - startColor.b));
+
+    return `rgb(${r}, ${g}, ${b})`;
   }
 
   /**
