@@ -1,7 +1,30 @@
 export class AudioUtil {
 
   // Contexto de audio, necesario para crear y manipular audio.
-  private static audioContext: AudioContext = new AudioContext();
+  private static audioContext: AudioContext | null = null;
+
+  /**
+   * Crea el contexto de audio si aún no se ha creado.
+   */
+  static createAudioContext() {
+    if (!this.audioContext)
+      this.audioContext = new AudioContext();
+  }
+
+  static suspendAudioContext() {
+    if (this.audioContext && this.audioContext.state !== 'suspended')
+      this.audioContext.suspend()
+  }
+
+  /**
+   * Necesario para verificar si el usuario realizó un gesto en la web para poder
+   * reproducir sonido 
+   * https://developer.chrome.com/blog/autoplay/#webaudio
+   * @returns true si se ha creado el audio context, false caso contrario
+   */
+  static isAudioContextCreated(): boolean {
+    return !!this.audioContext;
+  }
 
   /**
    * Reproduce un sonido con una interpolación de frecuencia.
@@ -10,6 +33,8 @@ export class AudioUtil {
    * @param duration - Duración del sonido en segundos (por defecto es 0.1 segundos).
    */
   static playInterpolatedSound(startFreq: number, endFreq: number, duration: number = 0.1) {
+    if (!this.audioContext || this.audioContext.state !== 'running')
+      return;
     // Crear un oscilador, que es un generador de ondas sonoras.
     const oscillator = this.audioContext.createOscillator();
     // Crear un nodo de ganancia para controlar el volumen.

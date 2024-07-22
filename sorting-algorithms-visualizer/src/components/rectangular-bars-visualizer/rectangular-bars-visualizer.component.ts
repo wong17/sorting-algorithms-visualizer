@@ -41,7 +41,7 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
   private animationDelay: number = 100;
 
   /* Para activar o desactivar los controles */
-  public disableSelect = false;
+  public disableSelect = true; // Desactivado por defecto durante la animación inicial
   public disableInputRange = false;
   public disableShuffleButton = false;
   public disableSortButton = false;
@@ -65,7 +65,12 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
     this.animate();
     // Por defecto esta seleccionado el quickSort
     this.selectedAlgorithmInstance = SortingAlgorithmManager.getAlgorithmInstance(this.selectedAlgorithm);
+
     window.addEventListener('resize', this.onResize.bind(this));
+    // Agregar eventos para la creación del contexto de audio cuando el usuario haga un gesto sobre la ventana
+    // debido a la Autoplay policy https://developer.chrome.com/blog/autoplay/#webaudio
+    window.addEventListener('click', () => { AudioUtil.createAudioContext() });
+    window.addEventListener('keydown', () => { AudioUtil.createAudioContext() });
   }
 
   /**
@@ -73,6 +78,8 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
    */
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.onResize.bind(this));
+    window.removeEventListener('click', () => { AudioUtil.suspendAudioContext() });
+    window.removeEventListener('keydown', () => { AudioUtil.suspendAudioContext() });
   }
 
   /**
@@ -148,12 +155,14 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
       const maxBarHeight = Math.max(...this.barsHeight);
       ArrayUtil.swap(this.barsHeight, index1, index2);
 
-      // Reproduce sonidos con interpolación basada en la altura de las barras
-      AudioUtil.playInterpolatedSound(
-        this.soundStartFrequency + (this.barsHeight[index1] / maxBarHeight) * this.soundEndFrequency,
-        this.soundStartFrequency + (this.barsHeight[index2] / maxBarHeight) * this.soundEndFrequency,
-        0.05
-      );
+      if (AudioUtil.isAudioContextCreated()) {
+        // Reproduce sonidos con interpolación basada en la altura de las barras
+        AudioUtil.playInterpolatedSound(
+          this.soundStartFrequency + (this.barsHeight[index1] / maxBarHeight) * this.soundEndFrequency,
+          this.soundStartFrequency + (this.barsHeight[index2] / maxBarHeight) * this.soundEndFrequency,
+          0.05
+        );
+      }
 
       setTimeout(() => {
         this.isShuffleAnimationRunning = this.shuffleSteps.length > 0;
@@ -175,18 +184,19 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
         // Obtener estado del arreglo en ese momento
         this.barsHeight = arrayState;
         this.animationStepIndex++;
-        
-        // Reproducir sonido
-        if (comparingIndices.length > 1) {
-          // Interpolación entre frecuencias según la altura de las barras comparadas
-          const startFreq = this.soundStartFrequency + (this.barsHeight[comparingIndices[0]] / maxBarHeight) * this.soundEndFrequency;
-          const endFreq = this.soundStartFrequency + (this.barsHeight[comparingIndices[1]] / maxBarHeight) * this.soundEndFrequency;
-          AudioUtil.playInterpolatedSound(startFreq, endFreq, 0.05);
-        } else if (swappingIndices.length > 1) {
-          // Interpolación entre frecuencias según la altura de las barras intercambiadas
-          const startFreq = this.soundStartFrequency + (this.barsHeight[swappingIndices[0]] / maxBarHeight) * this.soundEndFrequency;
-          const endFreq = this.soundStartFrequency + (this.barsHeight[swappingIndices[1]] / maxBarHeight) * this.soundEndFrequency;
-          AudioUtil.playInterpolatedSound(startFreq, endFreq, 0.05);
+
+        if (AudioUtil.isAudioContextCreated()) {
+          if (comparingIndices.length > 1) {
+            // Interpolación entre frecuencias según la altura de las barras comparadas
+            const startFreq = this.soundStartFrequency + (this.barsHeight[comparingIndices[0]] / maxBarHeight) * this.soundEndFrequency;
+            const endFreq = this.soundStartFrequency + (this.barsHeight[comparingIndices[1]] / maxBarHeight) * this.soundEndFrequency;
+            AudioUtil.playInterpolatedSound(startFreq, endFreq, 0.05);
+          } else if (swappingIndices.length > 1) {
+            // Interpolación entre frecuencias según la altura de las barras intercambiadas
+            const startFreq = this.soundStartFrequency + (this.barsHeight[swappingIndices[0]] / maxBarHeight) * this.soundEndFrequency;
+            const endFreq = this.soundStartFrequency + (this.barsHeight[swappingIndices[1]] / maxBarHeight) * this.soundEndFrequency;
+            AudioUtil.playInterpolatedSound(startFreq, endFreq, 0.05);
+          }
         }
 
         setTimeout(() => {
@@ -269,8 +279,7 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
    */
   public onShuffleArrayBtnClick(_event: Event): void {
     this.prepareShuffle();
-    // Desactivar select que contiene algoritmos de ordenamiento mientras se realiza la animación
-    this.disableSelect = true;
+    this.disableSelect = this.disableSortButton = true;
   }
 
   /**
@@ -280,8 +289,7 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
   onBarsInputChange(_event: Event): void {
     this.setupBars();
     this.draw();
-    // Desactivar select que contiene algoritmos de ordenamiento mientras se realiza la animación
-    this.disableSelect = true;
+    this.disableSelect = this.disableSortButton = true;
   }
 
   /**
