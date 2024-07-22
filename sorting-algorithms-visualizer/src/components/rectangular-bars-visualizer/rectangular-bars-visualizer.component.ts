@@ -126,7 +126,7 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
     // Resetear cantidad de barras
     this.barsHeight = [];
     for (let i = 0; i < this.numberOfBars; i++) {
-      this.barsHeight[i - 1] = (randomIndices[i] / this.numberOfBars) * canvasHeight;
+      this.barsHeight[i] = (randomIndices[i] / this.numberOfBars) * canvasHeight;
     }
     // Desordenar arreglo
     this.prepareShuffle();
