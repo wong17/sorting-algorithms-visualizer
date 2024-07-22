@@ -15,6 +15,20 @@ export class ArrayUtil {
   }
 
   /**
+   * Genera un arreglo de números aleatorios del 1 al n sin repetición.
+   * @param n - El número máximo de elementos en el arreglo.
+   * @returns Un arreglo de números aleatorios.
+   */
+  static random(n: number): number[] {
+    const array = Array.from({ length: n }, (_, i) => i + 1);
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      this.swap(array, i, j);
+    }
+    return array;
+  }
+
+  /**
    * Intercambia de lugar dos elementos del arreglo.
    * @param array - El arreglo que contiene los elementos
    * @param index1 - Índice del primer elemento

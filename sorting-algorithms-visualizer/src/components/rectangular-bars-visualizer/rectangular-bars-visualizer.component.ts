@@ -114,10 +114,12 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
     this.barWidth = this.myCanvas.nativeElement.width / this.numberOfBars;
     // Obtener altura del canvas
     const canvasHeight = this.myCanvas.nativeElement.height;
+    // Generar arreglo aleatorio entre 1 y numberOfBars - 1
+    const randomIndices = ArrayUtil.random(this.numberOfBars);
     // Resetear cantidad de barras
     this.barsHeight = [];
-    for (let i = 1; i <= this.numberOfBars; i++) {
-      this.barsHeight[i - 1] = (i / this.numberOfBars) * canvasHeight;
+    for (let i = 0; i < this.numberOfBars; i++) {
+      this.barsHeight[i - 1] = (randomIndices[i] / this.numberOfBars) * canvasHeight;
     }
     // Desordenar arreglo
     this.prepareShuffle();
