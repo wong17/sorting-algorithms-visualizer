@@ -21,7 +21,7 @@ export class ArrayUtil {
    */
   static random(n: number): number[] {
     const array = Array.from({ length: n }, (_, i) => i + 1);
-    for (let i = n - 1; i > 0; i--) {
+    for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       this.swap(array, i, j);
     }
