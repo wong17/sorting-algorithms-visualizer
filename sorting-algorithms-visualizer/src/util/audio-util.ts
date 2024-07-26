@@ -1,6 +1,5 @@
 export class AudioUtil {
 
-  // Contexto de audio, necesario para crear y manipular audio.
   private static audioContext: AudioContext | null = null;
 
   /**
@@ -31,8 +30,9 @@ export class AudioUtil {
    * @param startFreq - Frecuencia inicial en Hertz.
    * @param endFreq - Frecuencia final en Hertz.
    * @param duration - Duración del sonido en segundos (por defecto es 0.1 segundos).
+   * @param volume - Volumen del sonido (por defecto es 0.1).
    */
-  static playInterpolatedSound(startFreq: number, endFreq: number, duration: number = 0.1) {
+  static playInterpolatedSound(startFreq: number, endFreq: number, duration: number = 0.1, volume: number = 0.1) {
     if (!this.audioContext || this.audioContext.state !== 'running')
       return;
     // Crear un oscilador, que es un generador de ondas sonoras.
@@ -48,7 +48,7 @@ export class AudioUtil {
 
     // Interpolar entre las frecuencias durante la duración especificada.
     oscillator.frequency.linearRampToValueAtTime(endFreq, this.audioContext.currentTime + duration);
-    gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime); // Volume control
+    gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime); // Volume control
     gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + duration);
 
     // Iniciar el oscilador en el tiempo actual.
