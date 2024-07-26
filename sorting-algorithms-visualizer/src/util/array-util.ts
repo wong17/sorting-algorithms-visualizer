@@ -1,9 +1,10 @@
 export class ArrayUtil {
 
   /**
-   * Implementación de Fisher-Yates Sorting Algorithm para generar los pasos de barajado.
-   * @param array - El arreglo que se va a barajar
-   * @returns - Una lista de pasos (pares de índices) para la animación del barajado
+   * Desordenar el arreglo y generar el paso a paso de la animación, utiliza una implementación de Fisher-Yates Shuffle Algorithm
+   * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+   * @param array - El arreglo que se va a desordenar
+   * @returns - Una lista de pasos (pares de índices) para la animación de desordenado
    */
   static prepareShuffle(array: number[]): [number, number][] {
     const shuffleSteps: [number, number][] = [];
@@ -15,7 +16,8 @@ export class ArrayUtil {
   }
 
   /**
-   * Genera un arreglo de números aleatorios del 1 al n sin repetición.
+   * Genera un arreglo de números aleatorios [1, n-1] sin repetición, utiliza una implementación de Fisher-Yates Shuffle Algorithm
+   * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
    * @param n - El número máximo de elementos en el arreglo.
    * @returns Un arreglo de números aleatorios.
    */
