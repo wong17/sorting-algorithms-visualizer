@@ -24,7 +24,6 @@ export class BubbleSort extends SortingAlgorithm {
    * @returns - El arreglo ordenado.
    */
   private bubbleSort(array: number[], n: number): number[] {
-    // Iterar sobre cada elemento del arreglo
     for (let i = 0; i < n - 1; i++) {
       for (let j = 0; j < n - 1 - i; j++) {
         // Registrar el estado actual del arreglo y los índices comparados

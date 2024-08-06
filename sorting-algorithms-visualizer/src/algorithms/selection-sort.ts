@@ -24,7 +24,6 @@ export class SelectionSort extends SortingAlgorithm {
    * @returns - El arreglo ordenado.
    */
   private selectionSort(array: number[], n: number): number[] {
-    // Iterar sobre cada elemento del arreglo
     for (let i = 0; i < n; i++) {
       let min = i; // Suponer que el elemento actual es el mínimo
 
