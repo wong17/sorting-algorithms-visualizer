@@ -66,7 +66,6 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
     // Por defecto esta seleccionado el quickSort
     this.selectedAlgorithmInstance = SortingAlgorithmManager.getAlgorithmInstance(this.selectedAlgorithm);
 
-    window.addEventListener('resize', this.onResize.bind(this));
     // Agregar eventos para la creación del contexto de audio cuando el usuario haga un gesto sobre la ventana
     // debido a la Autoplay policy https://developer.chrome.com/blog/autoplay/#webaudio
     window.addEventListener('click', () => { AudioUtil.createAudioContext() });
@@ -77,7 +76,6 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
    * Limpia los eventos registrados al destruir el componente
    */
   ngOnDestroy(): void {
-    window.removeEventListener('resize', this.onResize.bind(this));
     window.removeEventListener('click', () => { AudioUtil.suspendAudioContext() });
     window.removeEventListener('keydown', () => { AudioUtil.suspendAudioContext() });
   }
@@ -277,7 +275,7 @@ export class RectangularBarsVisualizerComponent implements AfterViewInit, OnDest
   /**
    * Desordena el arreglo de las barras
    */
-  public onShuffleArrayBtnClick(_event: Event): void {
+  onShuffleArrayBtnClick(_event: Event): void {
     this.prepareShuffle();
     this.disableSelect = this.disableSortButton = true;
   }
